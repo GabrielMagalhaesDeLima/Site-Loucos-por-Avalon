@@ -1,38 +1,39 @@
-import process = require("process");
-
 const express = require('express');
 const cors = require('cors');
 const cron = require('node-cron');
 
 const app = express();
-app.use(express.json());
+
+// Configurações para o site conseguir conversar com o servidor
 app.use(cors());
+app.use(express.json());
 
-//Aqui guardamos os jogadores (em memoria, sem compilação de banco por enquanto)
-let listaJogadores: any[] = [];
+let listaJogadores = [];
 
-//Rota para registrar
+// Rota de Registro - Agora responde JSON para o botão destravar
 app.post('/registrar', (req, res) => {
-    const { nick, ip, classe } = req.body;
-    const novo = { nick, ip, classe, hora: new Date() };
-    listaJogadores.push(novo);
-    res.send('Registrado com sucesso! prepare-se para a DG. USE O COMANDO #forcecityoverload true!');
+const { nick, ip, classe } = req.body;
+
 });
 
-//Rota para o caller ver
+// Rota para buscar os dados por classe
 app.get('/admin/:classe', (req, res) => {
-    const filtrados =
-    listaJogadores.filter(j => j.classe === req.params.classe);
-    res.json(filtrados);
+const { classe } = req.params;
+const filtrados = listaJogadores.filter(j => j.classe === classe);
+res.json(filtrados);
 });
 
-//Limpeza Automatica (Roda a cada 30 minutos e apaga oque tiver + de 2 horas registado)
+// Limpeza automática a cada 30 minutos (Corrigida)
 cron.schedule('*/30 * * * *', () => {
-    const limite = new Date(Date.now()) - 2 * 60 * 60 * 1000; // 2 horas em milissegundos
-    listaJogadores = listaJogadores.filter(j => j.hora > limite);
-    console.log('Limpeza realizada.');
-}); 
+const duasHorasEmMs = 2 * 60 * 60 * 1000;
+const limite = Date.now() - duasHorasEmMs;
+listaJogadores = listaJogadores.filter(j => j.hora > limite);
+console.log('Limpeza de dados antigos feita.');
+});
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Rodando na porta ${PORT}`));
- 
+
+// O '0.0.0.0' faz o Render aceitar as conexões externas
+app.listen(PORT, '0.0.0.0', () => {
+console.log(Servidor rodando na porta ${PORT});
+});

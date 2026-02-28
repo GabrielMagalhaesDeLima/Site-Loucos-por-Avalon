@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel do Caller - Loucos Por avalon</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-zinc-950 text-zinc-100 p-8 font-sans">
+    <div class="max-w-4xl mx-auto">
+        <header class="flex justify-between items-center mb-8 border-b border-zinc-800 pb-6">
+            <div>
+                <h1 class="text-3xl font-black text-blue-500 uppercase tracking-tighter">Painel do Caller</h1>
+                <p class="text-zinc-500">Disputa de ip</p>
+            </div>
+            <select id="filtro" onchange="buscar()" class="bg-zinc-900 border border-zinc-700 p-3 rounded-xl font-bold text-blue-400">
+                 <option value="Off-Tank"> Listar Off-Tank</option>
+                    <option value="Main Heal"> Listar Main-Heal</option>
+                    <option value="Elevado">Listar Elevado</option>
+                    <option value="Silence">Listar Silence</option>
+                     <option value="Quebra Reinos">Listar Quebra Reinos</option>
+                    <option value="Raiz ferrea">Listar Raiz Ferrea</option>
+                    <option value="Bruxo">Listar Bruxo</option>
+                    <option value="Incubus">Listar Incubus</option>
+                    <option value="Oculto">Listar Oculto</option>
+                    <option value="Bruxo Dps">Listar Bruxo Dps</option>
+                    <option value="Foice">Listar Foice</option>
+                    <option value="Fire">Listar Fire</option>
+                    <option value="Frost">Listar Frost</option>
+                    <option value="Repetidor">Listar Repetidor</option>
+                    <option value="Aguia">Listar Aguia</option>
+                    <option value="Raiz Dps">Listar Raiz Dps</option>
+            </select>
+        </header>
+
+        <div id="lista" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <p class="text-zinc-600 italic">Selecione uma classe para ver os jogadores...</p>
+        </div>
+    </div>
+
+    <script>
+        async function buscar() {
+            const classe = document.getElementById('filtro').value;
+            const container = document.getElementById('lista');
+            
+            try {
+                const res = await fetch(`http://localhost:3000/admin/${classe}`);
+                const dados = await res.json();
+
+                if(dados.length === 0) {
+                    container.innerHTML = `<div class="col-span-full py-10 text-center border-2 border-dashed border-zinc-800 rounded-2xl text-zinc-500">Nenhum ${classe} registrado ainda.</div>`;
+                    return;
+                }
+
+                container.innerHTML = dados.map(j => `
+                    <div class="bg-zinc-900 border border-zinc-800 p-5 rounded-2xl flex justify-between items-center hover:border-blue-900 transition-colors">
+                        <div>
+                            <h3 class="font-bold text-lg">${j.nick}</h3>
+                            <span class="text-xs text-zinc-500 uppercase">Classe: ${j.classe}</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="block text-2xl font-black text-blue-500">${j.ip}</span>
+                            <span class="text-[10px] text-zinc-600 font-mono italic">IP Registrado</span>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                container.innerHTML = `<p class="text-red-500">Erro: O servidor está offline.</p>`;
+            }
+        }
+        // Busca automática ao abrir
+        buscar();
+    </script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disputa de ip - Loucos Por Avalon</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-zinc-950 text-zinc-100 font-sans min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-zinc-900 border border-zinc-800 p-8 rounded-2xl shadow-2xl w-full max-w-md">
+        <h1 class="text-2xl font-bold text-blue-500 mb-2 text-center">Registro de Classe</h1>
+        <p class="text-zinc-400 text-sm text-center mb-6">Insira seus dados para disputar o ip</p>
+
+        <div class="space-y-4">
+            <div>
+                <label class="block text-xs uppercase font-bold text-zinc-500 mb-1">Nick do Personagem</label>
+                <input id="nick" type="text" placeholder="Ex: PlayerOne" 
+                    class="w-full bg-zinc-800 border border-zinc-700 p-3 rounded-lg focus:outline-none focus:border-blue-500 transition-all">
+            </div>
+
+            <div>
+                <label class="block text-xs uppercase font-bold text-zinc-500 mb-1">Item Power (IP)</label>
+                <input id="ip" type="number" placeholder="Ex: 1450" 
+                    class="w-full bg-zinc-800 border border-zinc-700 p-3 rounded-lg focus:outline-none focus:border-blue-500 transition-all">
+            </div>
+
+            <div>
+                <label class="block text-xs uppercase font-bold text-zinc-500 mb-1">Sua Classe</label>
+                <select id="classe" class="w-full bg-zinc-800 border border-zinc-700 p-3 rounded-lg focus:outline-none focus:border-blue-500 transition-all appearance-none">
+                    <option value="Off-Tank"> Off-Tank</option>
+                    <option value="Main Heal"> Main-Heal</option>
+                    <option value="Elevado">Elevado</option>
+                    <option value="Silence">Silence</option>
+                     <option value="Quebra Reinos">Quebra Reinos</option>
+                    <option value="Raiz ferrea">Raiz Ferrea</option>
+                    <option value="Bruxo">Bruxo</option>
+                    <option value="Incubus">Incubus</option>
+                    <option value="Oculto">Oculto</option>
+                    <option value="Bruxo Dps">Bruxo Dps</option>
+                    <option value="Foice">Foice</option>
+                    <option value="Fire">Fire</option>
+                    <option value="Frost">Frost</option>
+                    <option value="Repetidor">Repetidor</option>
+                    <option value="Aguia">Aguia</option>
+                    <option value="Raiz Dps">Raiz Dps</option>
+
+                </select>
+            </div>
+
+            <button onclick="enviarDados()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg shadow-lg shadow-blue-900/20 transition-all mt-4">
+                Registrar no Grupo
+            </button>
+            
+            <p id="msgSucesso" class="hidden text-green-400 text-center font-medium mt-4 bg-green-900/20 py-2 rounded">
+                ✅ Registrado! Agora basta dar o comando "#forcecityoverload true".
+            </p>
+        </div>
+    </div>
+
+    <script>
+        async function enviarDados() {
+            const btn = document.querySelector('button');
+            const nick = document.getElementById('nick').value;
+            const ip = document.getElementById('ip').value;
+            const classe = document.getElementById('classe').value;
+
+            if(!nick || !ip || !classe) return alert("Preencha tudo!");
+
+            btn.disabled = true;
+            btn.innerText = "Enviando...";
+
+            try {
+                await fetch('http://localhost:3000/registrar', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ nick, ip, classe })
+                });
+
+                document.getElementById('msgSucesso').classList.remove('hidden');
+                btn.innerText = "Registrado!";
+            } catch (err) {
+                alert("Erro ao conectar com o servidor. O npm start tá rodando?");
+                btn.disabled = false;
+                btn.innerText = "Registrar no Grupo";
+            }
+        }
+    </script>
+</body>
+</html>

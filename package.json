@@ -6,7 +6,8 @@
   "type": "commonjs",
 
   "scripts": {
-  "start": "ts-node-dev --respawn --transpile-only server.ts",
+  "start": "npx ts-node server.ts",
+  "build": "npm install"
   "test": "echo \"Error: no test specified\" && exit 1"
   },
 

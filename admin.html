@@ -43,7 +43,7 @@
             const container = document.getElementById('lista');
             
             try {
-                const res = await fetch(`http://localhost:3000/admin/${classe}`);
+                const res = await fetch(`https://site-loucos-por-avalon.onrender.com/admin/${classe}`);
                 const dados = await res.json();
 
                 if(dados.length === 0) {

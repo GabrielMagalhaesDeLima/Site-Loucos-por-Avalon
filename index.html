@@ -71,7 +71,7 @@
             btn.innerText = "Enviando...";
 
             try {
-                await fetch('http://localhost:3000/registrar', {
+                await fetch('https://site-loucos-por-avalon.onrender.com/registrar', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ nick, ip, classe })

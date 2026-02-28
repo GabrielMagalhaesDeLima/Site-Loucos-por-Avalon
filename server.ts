@@ -1,6 +1,7 @@
-const express = require('express');
-const cors = require('cors');
-const cron = require('node-cron');
+import express from 'express';
+import type { Request, Response } from 'express';
+import cors from 'cors';
+import cron from 'node-cron';
 
 const app = express();
 
@@ -8,16 +9,23 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-let listaJogadores = [];
+interface Jogador {
+  nick: string;
+  ip: string;
+  classe: string;
+  hora: number;
+}
+
+let listaJogadores: Jogador[] = [];
 
 // Rota de Registro - Agora responde JSON para o botão destravar
-app.post('/registrar', (req, res) => {
+app.post('/registrar', (req: Request, res: Response) => {
 const { nick, ip, classe } = req.body;
 
 });
 
 // Rota para buscar os dados por classe
-app.get('/admin/:classe', (req, res) => {
+app.get('/admin/:classe', (req: Request, res: Response) => {
 const { classe } = req.params;
 const filtrados = listaJogadores.filter(j => j.classe === classe);
 res.json(filtrados);
@@ -31,9 +39,9 @@ listaJogadores = listaJogadores.filter(j => j.hora > limite);
 console.log('Limpeza de dados antigos feita.');
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT) || 3000;
 
 // O '0.0.0.0' faz o Render aceitar as conexões externas
 app.listen(PORT, '0.0.0.0', () => {
-console.log(Servidor rodando na porta ${PORT});
+console.log(`Servidor rodando na porta ${PORT}`);
 });

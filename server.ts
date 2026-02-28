@@ -50,12 +50,15 @@ app.get('/admin/:classe', (req: Request, res: Response) => {
   res.json(filtrados);
 });
 
-// Limpeza automática a cada 30 minutos
-cron.schedule('*/30 * * * *', () => {
-  const duasHorasEmMs = 2 * 60 * 60 * 1000;
-  const limite = Date.now() - duasHorasEmMs;
-  listaJogadores = listaJogadores.filter(j => j.hora > limite);
-  console.log('🧹 Limpeza de dados antigos feita.');
+// Limpeza 
+app.delete('/admin/limpar', (req: Request, res: Response) => {
+  try {
+    listaJogadores = []; // Zera a lista completamente
+    console.log('🧹 Limpeza manual realizada pelo admin.');
+    res.status(200).json({ status: "ok", mensagem: "Lista limpa com sucesso!" });
+  } catch (error) {
+    res.status(500).json({ erro: "Erro ao limpar os dados" });
+  }
 });
 
 const PORT = Number(process.env.PORT) || 3000;

@@ -6,6 +6,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-zinc-950 text-zinc-100 p-8 font-sans">
+
+    <button onclick="limparDados()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-lg mt-6">
+    🗑️ Limpar Todos os Registros
+</button>
+
     <div class="max-w-4xl mx-auto">
         <header class="flex justify-between items-center mb-8 border-b border-zinc-800 pb-6">
             <div>
@@ -70,5 +75,33 @@
         // Busca automática ao abrir
         buscar();
     </script>
+    <script>
+    async function limparDados() {
+        // 1. A caixinha de confirmação do navegador (Evita miss click)
+        const confirmacao = confirm("⚠️ ATENÇÃO: Tem certeza que deseja apagar TODOS os jogadores da lista? Essa ação não pode ser desfeita.");
+        
+        // 2. Se o usuário clicar em "Cancelar", a função para aqui e nada acontece
+        if (!confirmacao) {
+            return; 
+        }
+
+        // 3. Se clicar em "OK", manda a ordem pro servidor apagar tudo
+        try {
+            const res = await fetch('https://site-loucos-por-avalon.onrender.com/admin/limpar', {
+                method: 'DELETE' // Método DELETE para apagar dados
+            });
+
+            if (res.ok) {
+                alert("✅ Todos os registros foram apagados!");
+                location.reload(); // Recarrega a página para sumir os nomes da tela
+            } else {
+                alert("❌ Erro ao tentar apagar os dados no servidor.");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("❌ Erro de conexão com o servidor.");
+        }
+    }
+</script>
 </body>
 </html>

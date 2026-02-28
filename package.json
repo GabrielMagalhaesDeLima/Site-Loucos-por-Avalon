@@ -1,16 +1,12 @@
 {
   "name": "site-ping-dg-ava-loucos",
   "version": "1.0.0",
-  "description": "",
-  "main": "server.ts",
   "type": "module",
+  "main": "server.ts",
   "scripts": {
-    "start": "npx ts-node server.ts",
+    "start": "node --loader ts-node/esm server.ts",
     "build": "npm install"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.18.2",

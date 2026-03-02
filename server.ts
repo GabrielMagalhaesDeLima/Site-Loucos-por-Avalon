@@ -5,7 +5,6 @@ import cron from 'node-cron';
 
 const app = express();
 
-// Configurações para o site conseguir conversar com o servidor
 app.use(cors());
 app.use(express.json());
 
@@ -18,7 +17,6 @@ interface Jogador {
 
 let listaJogadores: Jogador[] = [];
 
-// Rota de Registro - Agora COM LÓGICA e responde JSON para o botão destravar
 app.post('/registrar', (req: Request, res: Response) => {
   try {
     const { nick, ip, classe } = req.body;
@@ -35,7 +33,7 @@ app.post('/registrar', (req: Request, res: Response) => {
     listaJogadores.push(novo);
     console.log(`✅ Jogador ${nick} cadastrado com sucesso!`);
 
-    // 3. Avisa o site que deu tudo certo (Isso destrava o botão!)
+    // 3. Avisa o site que deu tudo certo
     res.status(200).json({ status: "ok", mensagem: "Registrado com sucesso!" });
   } catch (error) {
     console.error("Erro ao registrar:", error);
@@ -44,14 +42,14 @@ app.post('/registrar', (req: Request, res: Response) => {
 });
 
 // Rota para buscar os dados por classe
-app.get('/admin/:classe', (req: Request, res: Response) => {
+app.get('/fazoL/:classe', (req: Request, res: Response) => {
   const { classe } = req.params;
   const filtrados = listaJogadores.filter(j => j.classe === classe);
   res.json(filtrados);
 });
 
 // Limpeza 
-app.delete('/admin/limpar', (req: Request, res: Response) => {
+app.delete('/fazoL/limpar', (req: Request, res: Response) => {
   try {
     listaJogadores = []; // Zera a lista completamente
     console.log('🧹 Limpeza manual realizada pelo admin.');
